@@ -505,7 +505,7 @@ label {
 }
 
 .logout-button:hover {
-  color: var(--color-azul);
+  color: #0f60c4;
   transform: scale(1.05);
 }
 
@@ -541,4 +541,23 @@ label {
 }
 .btn-cerrar-error:hover {
   color: #7f1d1d;
+}
+
+.volver-link {
+  cursor: pointer;
+  color: var(--color-azul);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.1s ease;
+  display: inline-block;
+}
+
+.volver-link:hover {
+  color: #0f60c4;
+  transform: translateX(-2px);
+}
+
+.volver-link:active {
+  color: #0a4b9c;
+  transform: translateX(-1px) scale(0.98);
 }

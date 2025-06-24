@@ -12,7 +12,7 @@ import { obtenerDisponibilidadDeCitas, actualizarCita } from "../services/api";
 export default function ReagendarCita() {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const { id } = useParams(); // ID de la cita a reagendar
+  const { id } = useParams();
 
   const [disponibilidad, setDisponibilidad] = useState({});
   const [especialidad, setEspecialidad] = useState("");
@@ -84,75 +84,87 @@ export default function ReagendarCita() {
           onNavigateAgendarCita={() => navigate("/agendar-cita")}
         />
 
-        <Header
-          titulo="Reagendar cita"
-          breadcrumb="Inicio > Reagendar cita"
-          onLogout={logout}
-        />
-
         <div
-          className="d-flex flex-column gap-4 mt-4"
-          style={{ maxWidth: "600px", margin: "0 auto" }}
+          className="px-4 pt-4"
+          style={{ maxWidth: "1200px", margin: "0 auto" }}
         >
-          <InputConIcon
-            icon={<FaTooth size={20} />}
-            iconColor="#f59e0b"
-            value={especialidad}
-            onChange={(e) => {
-              setEspecialidad(e.target.value);
-              setEspecialista("");
-              setFecha("");
-              setHoraSeleccionada("");
-            }}
-            options={especialidades}
-            placeholder="Especialidad"
-            disabled={false}
+          <div
+            className="volver-link mb-2"
+            onClick={() => navigate("/dashboard")}
+          >
+            ← Volver
+          </div>
+
+          <Header
+            titulo="Reagendar cita"
+            breadcrumb="Inicio > Reagendar cita"
+            onLogout={logout}
           />
 
-          <InputConIcon
-            icon={<FaUserMd size={20} />}
-            iconColor="#f59e0b"
-            value={especialista}
-            onChange={(e) => {
-              setEspecialista(e.target.value);
-              setFecha("");
-              setHoraSeleccionada("");
-            }}
-            options={especialistas}
-            placeholder="Especialista"
-            disabled={!especialidad}
-          />
+          <div
+            className="d-flex flex-column gap-4 mt-4"
+            style={{ maxWidth: "600px", margin: "0 auto" }}
+          >
+            <InputConIcon
+              icon={<FaTooth size={20} />}
+              iconColor="#f59e0b"
+              value={especialidad}
+              onChange={(e) => {
+                setEspecialidad(e.target.value);
+                setEspecialista("");
+                setFecha("");
+                setHoraSeleccionada("");
+              }}
+              options={especialidades}
+              placeholder="Especialidad"
+              disabled={false}
+            />
 
-          <InputConIcon
-            icon={<FaCalendarAlt size={20} />}
-            iconColor="#f59e0b"
-            value={fecha}
-            onChange={(e) => {
-              setFecha(e.target.value);
-              setHoraSeleccionada("");
-            }}
-            options={fechas}
-            placeholder="Fecha"
-            disabled={!especialista}
-          />
+            <InputConIcon
+              icon={<FaUserMd size={20} />}
+              iconColor="#f59e0b"
+              value={especialista}
+              onChange={(e) => {
+                setEspecialista(e.target.value);
+                setFecha("");
+                setHoraSeleccionada("");
+              }}
+              options={especialistas}
+              placeholder="Especialista"
+              disabled={!especialidad}
+            />
 
-          <SelectorHorario
-            horarios={horarios}
-            seleccionado={horaSeleccionada}
-            onSeleccionar={setHoraSeleccionada}
-          />
+            <InputConIcon
+              icon={<FaCalendarAlt size={20} />}
+              iconColor="#f59e0b"
+              value={fecha}
+              onChange={(e) => {
+                setFecha(e.target.value);
+                setHoraSeleccionada("");
+              }}
+              options={fechas}
+              placeholder="Fecha"
+              disabled={!especialista}
+            />
 
-          {horaSeleccionada && (
-            <div className="mt-4 d-flex justify-content-center">
-              <button
-                className="btn-verde px-5 py-2 d-flex align-items-center justify-content-center gap-2"
-                style={{ minWidth: "220px", borderRadius: "10px" }}
-                onClick={() => setMostrarModal(true)}
-              >
-                <FaRedo /> Reagendar cita
-              </button>
-            </div>
-          )}
+            <SelectorHorario
+              horarios={horarios}
+              seleccionado={horaSeleccionada}
+              onSeleccionar={setHoraSeleccionada}
+            />
+
+            {horaSeleccionada && (
+              <div className="mt-4 d-flex justify-content-center">
+                <button
+                  className="btn-verde px-5 py-2 d-flex align-items-center justify-content-center gap-2"
+                  style={{ minWidth: "220px", borderRadius: "10px" }}
+                  onClick={() => setMostrarModal(true)}
+                >
+                  <FaRedo /> Reagendar cita
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {mostrarModal && (

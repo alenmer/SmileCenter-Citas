@@ -61,7 +61,13 @@ export default function ConfirmacionCita() {
           onNavigateAgendarCita={() => navigate("/agendar-cita")}
         />
 
-        <Header titulo="Confirmación" breadcrumb={migas} onLogout={logout} />
+        {/* Encabezado alineado con el contenido */}
+        <div
+          className="px-4 pt-4"
+          style={{ maxWidth: "1200px", margin: "0 auto" }}
+        >
+          <Header titulo="Confirmación" breadcrumb={migas} onLogout={logout} />
+        </div>
 
         <div className="contenedor-confirmacion mx-auto mt-5 text-center">
           <FaCheckCircle size={72} color="#28C76F" className="mb-4" />

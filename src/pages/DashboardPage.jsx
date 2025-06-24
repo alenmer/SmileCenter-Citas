@@ -81,11 +81,16 @@ export default function DashboardPage() {
           onNavigateAgendarCita={handleAgendarCita}
         />
 
-        <Header
-          titulo="Próximas citas"
-          breadcrumb="Inicio > Mis citas"
-          onLogout={logout}
-        />
+        <div
+          className="px-4 pt-4"
+          style={{ maxWidth: "1200px", margin: "0 auto" }}
+        >
+          <Header
+            titulo="Próximas citas"
+            breadcrumb="Inicio > Mis citas"
+            onLogout={logout}
+          />
+        </div>
 
         <div className="contenedor-dashboard-citas d-flex flex-column gap-4 mt-4 mx-auto">
           {citas.map((cita) => (
