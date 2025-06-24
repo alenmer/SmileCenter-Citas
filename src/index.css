@@ -561,3 +561,35 @@ label {
   color: #0a4b9c;
   transform: translateX(-1px) scale(0.98);
 }
+
+.contenido-cita {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icono-cita {
+  flex-shrink: 0;
+}
+
+.texto-cita {
+  flex-grow: 1;
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  .contenido-cita {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .icono-cita {
+    margin-bottom: 12px;
+  }
+
+  .texto-cita h5,
+  .texto-cita p {
+    text-align: center;
+  }
+}

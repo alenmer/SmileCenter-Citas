@@ -96,13 +96,13 @@ export default function DashboardPage() {
           {citas.map((cita) => (
             <div
               key={cita.id}
-              className="card-cita rounded d-flex justify-content-between align-items-center"
+              className="card-cita rounded d-flex justify-content-between align-items-center flex-wrap"
             >
-              <div className="d-flex align-items-center gap-3">
-                <div>
+              <div className="contenido-cita">
+                <div className="icono-cita">
                   <BiSolidCalendar size={36} color="#F59E0B" />
                 </div>
-                <div>
+                <div className="texto-cita">
                   <h5 className="mb-1 fw-bold card-titulo">
                     {cita.especialidad}
                   </h5>
@@ -112,6 +112,7 @@ export default function DashboardPage() {
                   </p>
                 </div>
               </div>
+
               <div className="d-flex flex-column gap-2">
                 <button
                   className="btn-verde d-flex align-items-center justify-content-center gap-2"
