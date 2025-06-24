@@ -1,0 +1,544 @@
+/* ─────────────────────────────────────────────
+   1. Variables y configuración general
+───────────────────────────────────────────── */
+:root {
+  --color-azul: #214461;
+  --color-naranja: #f59e0b;
+  --color-verde: #28c76f;
+  --color-rojo: #ef4444;
+  --color-fondo: #f9fafb;
+  --fuente: "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--fuente);
+}
+
+/* ─────────────────────────────────────────────
+   2. Utilidades generales (tipos, botones, links)
+───────────────────────────────────────────── */
+label {
+  font-weight: 600;
+  color: var(--color-azul);
+}
+
+.link-recuperar,
+.link-registro {
+  color: #0f60c4;
+  font-family: var(--fuente);
+  font-weight: 400;
+  font-size: 12px;
+  text-decoration: none;
+}
+.link-recuperar:hover,
+.link-registro:hover {
+  text-decoration: underline;
+}
+
+.btn-sistema {
+  width: 100%;
+  height: 40px;
+  background-color: #2196f3;
+  color: #ffffff;
+  border: 1px solid var(--color-azul);
+  border-radius: 10px;
+  font-family: var(--fuente);
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn-sistema:hover {
+  background-color: #1976d2;
+}
+
+.btn-verde {
+  background-color: var(--color-verde);
+  border: 1px solid var(--color-verde);
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-family: var(--fuente);
+  font-weight: 600;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.btn-verde:hover {
+  background-color: #22b765;
+}
+.btn-verde:active {
+  background-color: #1ea759;
+  transform: scale(0.98);
+}
+
+.btn-rojo {
+  background-color: var(--color-rojo);
+  border: 1px solid var(--color-rojo);
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-family: var(--fuente);
+  font-weight: 600;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.btn-rojo:hover {
+  background-color: #dc2626;
+}
+.btn-rojo:active {
+  background-color: #b91c1c;
+  transform: scale(0.98);
+}
+
+/* ─────────────────────────────────────────────
+   3. Estilos de login
+───────────────────────────────────────────── */
+.input-sistema {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #6b7280;
+  font-family: var(--fuente);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--color-azul);
+  padding: 0 12px;
+}
+.input-sistema::placeholder {
+  color: #6b7280;
+  font-weight: 400;
+  font-family: var(--fuente);
+}
+
+.logo-login {
+  width: 160px;
+  margin-bottom: 2rem;
+}
+
+.texto-registro {
+  font-family: var(--fuente);
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* ─────────────────────────────────────────────
+   4. Layout general (sidebar, header, main)
+───────────────────────────────────────────── */
+.dashboard-container {
+  min-height: 100vh;
+}
+
+.sidebar {
+  background-color: var(--color-azul);
+  width: 280px;
+}
+
+.sidebar-logo {
+  width: 100px;
+}
+
+.sidebar-link {
+  color: #ffffff;
+  font-size: 14px;
+  font-family: var(--fuente);
+}
+.sidebar-link:hover {
+  text-decoration: underline;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.main-content {
+  background-color: var(--color-fondo);
+  padding: 16px 16px 24px 16px;
+}
+
+.dashboard-title {
+  color: var(--color-azul);
+}
+
+.logout-button {
+  cursor: pointer;
+  color: var(--color-azul);
+  font-family: var(--fuente);
+  font-weight: 600;
+  font-size: 14px;
+}
+.logout-button span {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* ─────────────────────────────────────────────
+   5. Estilos de Dashboard (cards de citas)
+───────────────────────────────────────────── */
+.contenedor-dashboard-citas {
+  width: 100%;
+  max-width: 720px;
+}
+
+.card-cita {
+  background-color: #f3f4f6;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+.card-cita:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.card-titulo,
+.card-detalle {
+  color: var(--color-azul);
+}
+
+/* ─────────────────────────────────────────────
+   6. Estilos de Agendar Cita
+───────────────────────────────────────────── */
+.input-con-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--color-azul);
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.input-con-icon select {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-family: var(--fuente);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-azul);
+  flex-grow: 1;
+}
+
+.btn-horario {
+  width: 120px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-azul);
+  border: 2px solid var(--color-azul);
+  background-color: #ffffff;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+.btn-horario:hover {
+  background-color: #f3f4f6;
+}
+.btn-horario.active {
+  background-color: var(--color-azul);
+  color: white;
+  border-color: var(--color-azul);
+}
+
+/* ─────────────────────────────────────────────
+   7. Responsive y utilidades
+───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mobile-header {
+    background-color: var(--color-azul);
+  }
+
+  .mobile-logo {
+    width: 90px;
+    height: auto;
+  }
+
+  .mobile-menu {
+    background-color: var(--color-azul);
+    color: white;
+  }
+
+  .dashboard-header {
+    margin-top: 20px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .card-cita {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 20px;
+  }
+
+  .card-cita .btn-reagendar,
+  .card-cita .btn-cancelar {
+    width: 240px;
+    font-size: 16px;
+    padding: 14px 0;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  .card-cita .btn-reagendar {
+    margin-bottom: 10px;
+  }
+
+  .card-titulo {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .card-detalle {
+    font-size: 14px;
+  }
+}
+
+.menu-toggle {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+.menu-toggle:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.input-con-icon select:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ────────────── Estilos responsivos para Agendar Cita ────────────── */
+
+@media (max-width: 768px) {
+  .contenedor-agendar {
+    padding: 16px;
+  }
+
+  .input-con-icon {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .input-con-icon select {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .btn-horario {
+    flex: 1 1 calc(50% - 8px);
+    text-align: center;
+  }
+
+  .btn-verde {
+    width: 100%;
+    max-width: 320px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .card-titulo {
+    text-align: center;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
+
+/* ────────────── Mobile refinado: Agendar Cita ────────────── */
+@media (max-width: 768px) {
+  .input-con-icon {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .input-con-icon select {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .btn-horario {
+    flex: 1 1 calc(50% - 8px);
+    text-align: center;
+  }
+
+  .btn-verde {
+    width: 100%;
+    max-width: 320px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .card-titulo {
+    text-align: center;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
+
+/* ────────────── Modal de confirmación ────────────── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(33, 44, 97, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 30px 40px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box-custom {
+  background-color: #eeeeee;
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 460px;
+  width: 90%;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  color: var(--color-azul);
+  font-family: var(--fuente);
+  text-align: center;
+}
+
+.modal-titulo {
+  font-size: 18px;
+  color: var(--color-azul);
+  text-align: left;
+}
+
+.modal-listado li {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--color-azul);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.modal-label {
+  font-weight: 600;
+  display: inline;
+}
+
+.contenedor-confirmacion {
+  padding: 40px 20px;
+  max-width: 600px;
+}
+
+.card-datos-cita {
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  padding: 20px 30px;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  color: var(--color-azul);
+  font-family: var(--fuente);
+}
+
+.card-datos-cita p {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.botones-modal {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  text-align: center;
+}
+
+.botones-modal button {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .botones-modal {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .botones-modal button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 0;
+    font-size: 16px;
+  }
+}
+
+.logout-button {
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.logout-button:hover {
+  color: var(--color-azul);
+  transform: scale(1.05);
+}
+
+.logout-button:active {
+  transform: scale(0.95);
+}
+
+/* ────────────── Banner de error ────────────── */
+.error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 12px 24px;
+  font-family: var(--fuente);
+  font-size: 14px;
+  border-bottom: 1px solid #fca5a5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 2000;
+  text-align: left;
+}
+
+.btn-cerrar-error {
+  background: transparent;
+  border: none;
+  color: #991b1b;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 20px;
+}
+.btn-cerrar-error:hover {
+  color: #7f1d1d;
+}
