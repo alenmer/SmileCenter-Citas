@@ -15,7 +15,6 @@ export async function loginApi(username, password) {
     const data = await response.json();
 
     if (!response.ok) {
-      // Si la respuesta tiene un campo `error`, lánzalo como mensaje
       const message = data?.error || "Error de autenticación";
       throw new Error(message);
     }
@@ -35,7 +34,7 @@ export async function loginApi(username, password) {
 
 export async function obtenerCitasPorPaciente(pacienteId) {
   try {
-    const url = `http://127.0.0.1:3658/m1/919011-901517-default/api/citas?pacienteId=${pacienteId}`;
+    const url = `${config.API_BASE_URL}/citas?pacienteId=${pacienteId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -52,8 +51,7 @@ export async function obtenerCitasPorPaciente(pacienteId) {
 
 export async function obtenerDisponibilidadDeCitas() {
   try {
-    const url =
-      "http://127.0.0.1:3658/m1/919011-901517-default/api/disponibilidad-citas"; // Cambia si usas entorno real
+    const url = `${config.API_BASE_URL}/disponibilidad-citas`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -70,7 +68,7 @@ export async function obtenerDisponibilidadDeCitas() {
 
 export async function crearCita(cita) {
   try {
-    const url = "http://127.0.0.1:3658/m1/919011-901517-default/api/citas";
+    const url = `${config.API_BASE_URL}/citas`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -94,7 +92,7 @@ export async function crearCita(cita) {
 
 export async function actualizarCita(id, citaActualizada) {
   try {
-    const url = `http://127.0.0.1:3658/m1/919011-901517-default/api/citas/${id}`;
+    const url = `${config.API_BASE_URL}/citas/${id}`;
 
     const response = await fetch(url, {
       method: "PATCH",
@@ -118,7 +116,7 @@ export async function actualizarCita(id, citaActualizada) {
 
 export async function cancelarCita(id) {
   try {
-    const url = `http://127.0.0.1:3658/m1/919011-901517-default/api/citas/${id}`;
+    const url = `${config.API_BASE_URL}/citas/${id}`;
 
     const response = await fetch(url, {
       method: "DELETE",
