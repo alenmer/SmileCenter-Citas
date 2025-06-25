@@ -52,6 +52,13 @@ label {
   background-color: #1976d2;
 }
 
+.btn-sistema:disabled {
+  background-color: #d1d5db;
+  border-color: #9ca3af;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
 .btn-verde {
   background-color: var(--color-verde);
   border: 1px solid var(--color-verde);
@@ -117,6 +124,7 @@ label {
   color: #6b7280;
   font-weight: 400;
   font-family: var(--fuente);
+  font-size: 14px;
 }
 
 .logo-login {
@@ -592,4 +600,18 @@ label {
   .texto-cita p {
     text-align: center;
   }
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #6b7280;
+  user-select: none;
+}
+.toggle-password:hover {
+  color: #374151;
 }

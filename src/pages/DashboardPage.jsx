@@ -70,6 +70,7 @@ export default function DashboardPage() {
         isMobile={false}
         onNavigateMisCitas={handleMisCitas}
         onNavigateAgendarCita={handleAgendarCita}
+        onLogout={logout}
       />
 
       <main className="flex-grow-1 main-content">
@@ -79,17 +80,14 @@ export default function DashboardPage() {
           toggleMobileMenu={() => setMostrarMenu(!mostrarMenu)}
           onNavigateMisCitas={handleMisCitas}
           onNavigateAgendarCita={handleAgendarCita}
+          onLogout={logout}
         />
 
         <div
           className="px-4 pt-4"
           style={{ maxWidth: "1200px", margin: "0 auto" }}
         >
-          <Header
-            titulo="Próximas citas"
-            breadcrumb="Inicio > Mis citas"
-            onLogout={logout}
-          />
+          <Header titulo="Próximas citas" breadcrumb="Inicio > Mis citas" />
         </div>
 
         <div className="contenedor-dashboard-citas d-flex flex-column gap-4 mt-4 mx-auto">
@@ -112,7 +110,6 @@ export default function DashboardPage() {
                   </p>
                 </div>
               </div>
-
               <div className="d-flex flex-column gap-2">
                 <button
                   className="btn-verde d-flex align-items-center justify-content-center gap-2"

@@ -1,8 +1,7 @@
-// src/components/Sidebar.jsx
 import React from "react";
 import { PiListChecksBold } from "react-icons/pi";
 import { BiSolidCalendarCheck } from "react-icons/bi";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaPowerOff } from "react-icons/fa";
 
 export default function Sidebar({
   isMobile = false,
@@ -10,6 +9,7 @@ export default function Sidebar({
   toggleMobileMenu = () => {},
   onNavigateMisCitas = () => {},
   onNavigateAgendarCita = () => {},
+  onLogout = () => {},
 }) {
   const MenuItems = () => (
     <>
@@ -19,10 +19,16 @@ export default function Sidebar({
           Mis citas
         </span>
       </div>
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-2 mb-2">
         <BiSolidCalendarCheck size={20} color="#FFFFFF" />
         <span className="sidebar-link" onClick={onNavigateAgendarCita}>
           Agendar cita
+        </span>
+      </div>
+      <div className="d-flex align-items-center gap-2 mb-2">
+        <FaPowerOff size={20} color="#FFFFFF" />
+        <span className="sidebar-link" onClick={onLogout}>
+          Cerrar sesión
         </span>
       </div>
     </>

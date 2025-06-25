@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaListUl } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
@@ -10,6 +10,8 @@ export default function ConfirmacionCita() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const datos = location.state;
+
+  const [mostrarMenu, setMostrarMenu] = useState(false);
 
   useEffect(() => {
     if (!datos) {
@@ -50,23 +52,24 @@ export default function ConfirmacionCita() {
         isMobile={false}
         onNavigateMisCitas={handleVolver}
         onNavigateAgendarCita={() => navigate("/agendar-cita")}
+        onLogout={logout}
       />
 
-      <main className="flex-grow-1 main-content text-center">
+      <main className="flex-grow-1 main-content">
         <Sidebar
           isMobile={true}
-          showMobileMenu={false}
-          toggleMobileMenu={() => {}}
+          showMobileMenu={mostrarMenu}
+          toggleMobileMenu={() => setMostrarMenu(!mostrarMenu)}
           onNavigateMisCitas={handleVolver}
           onNavigateAgendarCita={() => navigate("/agendar-cita")}
+          onLogout={logout}
         />
 
-        {/* Encabezado alineado con el contenido */}
         <div
           className="px-4 pt-4"
           style={{ maxWidth: "1200px", margin: "0 auto" }}
         >
-          <Header titulo="Confirmación" breadcrumb={migas} onLogout={logout} />
+          <Header titulo="Confirmación" breadcrumb={migas} />
         </div>
 
         <div className="contenedor-confirmacion mx-auto mt-5 text-center">

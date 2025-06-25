@@ -81,6 +81,7 @@ export default function AgendarCita() {
         isMobile={false}
         onNavigateMisCitas={handleMisCitas}
         onNavigateAgendarCita={handleAgendarCita}
+        onLogout={logout}
       />
 
       <main className="flex-grow-1 main-content">
@@ -90,90 +91,80 @@ export default function AgendarCita() {
           toggleMobileMenu={() => setMostrarMenu(!mostrarMenu)}
           onNavigateMisCitas={handleMisCitas}
           onNavigateAgendarCita={handleAgendarCita}
+          onLogout={logout}
         />
 
         <div
           className="px-4 pt-4"
           style={{ maxWidth: "1200px", margin: "0 auto" }}
         >
-          <div
-            className="volver-link mb-2"
-            onClick={() => navigate("/dashboard")}
-          >
-            ← Volver
-          </div>
+          <Header titulo="Agendar cita" breadcrumb="Inicio > Agendar cita" />
+        </div>
 
-          <Header
-            titulo="Agendar cita"
-            breadcrumb="Inicio > Agendar cita"
-            onLogout={logout}
+        <div
+          className="d-flex flex-column gap-4 mt-4"
+          style={{ maxWidth: "600px", margin: "0 auto" }}
+        >
+          <InputConIcon
+            icon={<FaTooth size={20} />}
+            iconColor="#f59e0b"
+            value={especialidad}
+            onChange={(e) => {
+              setEspecialidad(e.target.value);
+              setEspecialista("");
+              setFecha("");
+              setHoraSeleccionada("");
+            }}
+            options={especialidadesDisponibles}
+            placeholder="Especialidad"
+            disabled={false}
           />
 
-          <div
-            className="d-flex flex-column gap-4 mt-4"
-            style={{ maxWidth: "600px", margin: "0 auto" }}
-          >
-            <InputConIcon
-              icon={<FaTooth size={20} />}
-              iconColor="#f59e0b"
-              value={especialidad}
-              onChange={(e) => {
-                setEspecialidad(e.target.value);
-                setEspecialista("");
-                setFecha("");
-                setHoraSeleccionada("");
-              }}
-              options={especialidadesDisponibles}
-              placeholder="Especialidad"
-              disabled={false}
-            />
+          <InputConIcon
+            icon={<FaUserMd size={20} />}
+            iconColor="#f59e0b"
+            value={especialista}
+            onChange={(e) => {
+              setEspecialista(e.target.value);
+              setFecha("");
+              setHoraSeleccionada("");
+            }}
+            options={especialistasDisponibles}
+            placeholder="Especialista"
+            disabled={!especialidad}
+          />
 
-            <InputConIcon
-              icon={<FaUserMd size={20} />}
-              iconColor="#f59e0b"
-              value={especialista}
-              onChange={(e) => {
-                setEspecialista(e.target.value);
-                setFecha("");
-                setHoraSeleccionada("");
-              }}
-              options={especialistasDisponibles}
-              placeholder="Especialista"
-              disabled={!especialidad}
-            />
+          <InputConIcon
+            icon={<FaCalendarAlt size={20} />}
+            iconColor="#f59e0b"
+            value={fecha}
+            onChange={(e) => {
+              setFecha(e.target.value);
+              setHoraSeleccionada("");
+            }}
+            options={fechasDisponibles}
+            placeholder="Fecha"
+            disabled={!especialista}
+          />
 
-            <InputConIcon
-              icon={<FaCalendarAlt size={20} />}
-              iconColor="#f59e0b"
-              value={fecha}
-              onChange={(e) => {
-                setFecha(e.target.value);
-                setHoraSeleccionada("");
-              }}
-              options={fechasDisponibles}
-              placeholder="Fecha"
-              disabled={!especialista}
-            />
+          <SelectorHorario
+            horarios={horariosDisponibles}
+            seleccionado={horaSeleccionada}
+            onSeleccionar={setHoraSeleccionada}
+          />
 
-            <SelectorHorario
-              horarios={horariosDisponibles}
-              seleccionado={horaSeleccionada}
-              onSeleccionar={setHoraSeleccionada}
-            />
-
-            {horaSeleccionada && (
-              <div className="mt-4 d-flex justify-content-center">
-                <button
-                  className="btn-verde px-5 py-2 d-flex align-items-center justify-content-center gap-2"
-                  style={{ minWidth: "220px", borderRadius: "10px" }}
-                  onClick={() => setMostrarModal(true)}
-                >
-                  <FaCalendarAlt />
-                  Confirmar cita
-                </button>
-              </div>
-            )}
-          </div>
+          {horaSeleccionada && (
+            <div className="mt-4 d-flex justify-content-center">
+              <button
+                className="btn-verde px-5 py-2 d-flex align-items-center justify-content-center gap-2"
+                style={{ minWidth: "220px", borderRadius: "10px" }}
+                onClick={() => setMostrarModal(true)}
+              >
+                <FaCalendarAlt />
+                Confirmar cita
+              </button>
+            </div>
+          )}
         </div>
 
         {mostrarModal && (

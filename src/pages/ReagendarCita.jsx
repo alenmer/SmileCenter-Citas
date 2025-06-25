@@ -14,6 +14,7 @@ export default function ReagendarCita() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const [mostrarMenu, setMostrarMenu] = useState(false);
   const [disponibilidad, setDisponibilidad] = useState({});
   const [especialidad, setEspecialidad] = useState("");
   const [especialista, setEspecialista] = useState("");
@@ -73,15 +74,17 @@ export default function ReagendarCita() {
         isMobile={false}
         onNavigateMisCitas={() => navigate("/dashboard")}
         onNavigateAgendarCita={() => navigate("/agendar-cita")}
+        onLogout={logout}
       />
 
       <main className="flex-grow-1 main-content">
         <Sidebar
           isMobile={true}
-          showMobileMenu={false}
-          toggleMobileMenu={() => {}}
+          showMobileMenu={mostrarMenu}
+          toggleMobileMenu={() => setMostrarMenu(!mostrarMenu)}
           onNavigateMisCitas={() => navigate("/dashboard")}
           onNavigateAgendarCita={() => navigate("/agendar-cita")}
+          onLogout={logout}
         />
 
         <div
@@ -98,7 +101,6 @@ export default function ReagendarCita() {
           <Header
             titulo="Reagendar cita"
             breadcrumb="Inicio > Reagendar cita"
-            onLogout={logout}
           />
 
           <div

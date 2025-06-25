@@ -4,10 +4,12 @@ import { InputText } from "primereact/inputtext";
 import { loginApi } from "../services/api";
 import { useAuth } from "../components/AuthProvider";
 import ErrorBanner from "../components/ErrorBanner";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
   const [username, setUser] = useState("");
   const [password, setPass] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -18,7 +20,9 @@ export default function LoginPage() {
       login(token, usuario);
       navigate("/dashboard");
     } catch (error) {
-      setErrorLogin("Credenciales incorrectas");
+      const mensaje =
+        error.response?.data?.mensaje || "Usuario y/o Contraseña incorrecto(s)";
+      setErrorLogin(mensaje);
     }
   };
 
@@ -62,13 +66,21 @@ export default function LoginPage() {
 
             <div className="mb-2">
               <label className="form-label">Contraseña:</label>
-              <InputText
-                type="password"
-                value={password}
-                onChange={(e) => setPass(e.target.value)}
-                className="w-100 input-sistema"
-                placeholder="Ingrese su contraseña"
-              />
+              <div className="position-relative">
+                <InputText
+                  type={mostrarPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPass(e.target.value)}
+                  className="w-100 input-sistema pe-5"
+                  placeholder="Ingrese su contraseña"
+                />
+                <span
+                  className="toggle-password"
+                  onClick={() => setMostrarPassword(!mostrarPassword)}
+                >
+                  {mostrarPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </div>
 
             <div className="text-end mb-3">
@@ -77,7 +89,12 @@ export default function LoginPage() {
               </a>
             </div>
 
-            <button type="button" className="btn-sistema" onClick={handleLogin}>
+            <button
+              type="button"
+              className="btn-sistema"
+              onClick={handleLogin}
+              disabled={!username || !password}
+            >
               Continuar
             </button>
 
