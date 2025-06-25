@@ -98,6 +98,13 @@ export default function AgendarCita() {
           className="px-4 pt-4"
           style={{ maxWidth: "1200px", margin: "0 auto" }}
         >
+          <div
+            className="volver-link mb-2"
+            onClick={() => navigate("/dashboard")}
+          >
+            ← Volver
+          </div>
+
           <Header titulo="Agendar cita" breadcrumb="Inicio > Agendar cita" />
         </div>
 
