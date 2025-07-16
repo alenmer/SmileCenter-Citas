@@ -136,3 +136,20 @@ export async function cancelarCita(id) {
     throw error;
   }
 }
+
+export async function obtenerTiempoServidor() {
+  try {
+    const url = `${config.API_BASE_URL}/tiempo-servidor`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("No se pudo obtener la hora del servidor");
+    }
+
+    const data = await response.json();
+    return data; // { fecha: "2025-07-17", hora: "20:30" }
+  } catch (error) {
+    console.error("Error en obtenerTiempoServidor:", error.message);
+    throw error;
+  }
+}

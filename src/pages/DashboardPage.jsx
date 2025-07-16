@@ -2,32 +2,88 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { FaRedo, FaTimes } from "react-icons/fa";
-import { BiSolidCalendar } from "react-icons/bi";
-import { obtenerCitasPorPaciente, cancelarCita } from "../services/api";
+import { BiSolidCalendar, BiCalendarX } from "react-icons/bi";
+import {
+  obtenerCitasPorPaciente,
+  cancelarCita,
+  obtenerTiempoServidor,
+} from "../services/api";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import ModalCancelarCita from "../components/ModalCancelarCita";
+import ErrorBanner from "../components/ErrorBanner";
 
 export default function DashboardPage() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [citas, setCitas] = useState([]);
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
+  const [mensajeError, setMensajeError] = useState("");
+  const [errorCarga, setErrorCarga] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function cargarCitas() {
+    const cargarCitas = async () => {
       try {
-        const data = await obtenerCitasPorPaciente(1);
-        setCitas(data);
+        if (!user?.id) return;
+
+        // Obtener hora actual del servidor
+        const { fecha: serverFecha, hora: serverHora } =
+          await obtenerTiempoServidor();
+        const [sy, sm, sd] = serverFecha.split("-").map(Number);
+        const [sh, smin] = serverHora.split(":").map(Number);
+        const fechaHoraServidor = new Date(sy, sm - 1, sd, sh, smin);
+
+        // Obtener citas
+        const data = await obtenerCitasPorPaciente(user.id);
+
+        // Filtrar citas válidas
+        const citasFiltradas = data.filter((cita) => {
+          const { fecha, hora, estado } = cita;
+          if (!fecha || !hora) return false;
+
+          const estadoValido =
+            estado && ["activa", "reprogramada"].includes(estado.toLowerCase());
+          if (!estadoValido) return false;
+
+          const [cy, cm, cd] = fecha.split("-").map(Number);
+          const [ch, cmin] = hora.split(":").map(Number);
+          const fechaHoraCita = new Date(cy, cm - 1, cd, ch, cmin);
+
+          if (
+            isNaN(fechaHoraCita.getTime()) ||
+            isNaN(fechaHoraServidor.getTime())
+          )
+            return false;
+
+          // LOG para verificar comportamiento
+          console.log("----");
+          console.log("Cita ID:", cita.id);
+          console.log("→ Cita:", fechaHoraCita.toISOString());
+          console.log("→ Servidor:", fechaHoraServidor.toISOString());
+          console.log(
+            "→ ¿Mostrar cita?:",
+            fechaHoraCita.getTime() > fechaHoraServidor.getTime()
+          );
+
+          return fechaHoraCita.getTime() > fechaHoraServidor.getTime();
+        });
+
+        setCitas(citasFiltradas);
+        setErrorCarga("");
       } catch (error) {
-        console.error("No se pudieron cargar las citas:", error.message);
+        console.error("Error al obtener citas:", error);
+        if (error.message.includes("Failed to fetch")) {
+          setErrorCarga("Error de red al consultar próximas citas.");
+        } else {
+          setErrorCarga("No se pudo cargar la información de tus citas.");
+        }
       }
-    }
+    };
 
     cargarCitas();
-  }, []);
+  }, [user]);
 
   const handleAgendarCita = () => {
     setMostrarMenu(false);
@@ -83,6 +139,16 @@ export default function DashboardPage() {
           onLogout={logout}
         />
 
+        {mensajeError && (
+          <ErrorBanner
+            mensaje={mensajeError}
+            onClose={() => setMensajeError("")}
+          />
+        )}
+        {errorCarga && (
+          <ErrorBanner mensaje={errorCarga} onClose={() => setErrorCarga("")} />
+        )}
+
         <div
           className="px-4 pt-4"
           style={{ maxWidth: "1200px", margin: "0 auto" }}
@@ -91,43 +157,67 @@ export default function DashboardPage() {
         </div>
 
         <div className="contenedor-dashboard-citas d-flex flex-column gap-4 mt-4 mx-auto">
-          {citas.map((cita) => (
-            <div
-              key={cita.id}
-              className="card-cita rounded d-flex justify-content-between align-items-center flex-wrap"
-            >
-              <div className="contenido-cita">
-                <div className="icono-cita">
-                  <BiSolidCalendar size={36} color="#F59E0B" />
-                </div>
-                <div className="texto-cita">
-                  <h5 className="mb-1 fw-bold card-titulo">
-                    {cita.especialidad}
-                  </h5>
-                  <p className="mb-1 card-detalle">{cita.odontologo}</p>
-                  <p className="mb-0 card-detalle">
-                    {formatearFecha(cita.fecha)}, {cita.hora}
-                  </p>
-                </div>
-              </div>
-              <div className="d-flex flex-column gap-2">
-                <button
-                  className="btn-verde d-flex align-items-center justify-content-center gap-2"
-                  onClick={() => navigate(`/reagendar/${cita.id}`)}
-                >
-                  <FaRedo size={16} />
-                  Reagendar cita
-                </button>
-                <button
-                  className="btn-rojo d-flex align-items-center justify-content-center gap-2"
-                  onClick={() => handleCancelarClick(cita)}
-                >
-                  <FaTimes size={16} />
-                  Cancelar cita
-                </button>
-              </div>
+          {citas.length === 0 ? (
+            <div className="mensaje-sin-citas">
+              <BiCalendarX className="icono-informativo" />
+              <h4>¡Aún no tienes citas activas agendadas!</h4>
+              <p>
+                Puedes agendar una nueva cita desde el menú seleccionando la
+                opción <strong>“Agendar cita”</strong>.
+              </p>
             </div>
-          ))}
+          ) : (
+            citas.map((cita) => (
+              <div
+                key={cita.id}
+                className="card-cita rounded d-flex justify-content-between align-items-center flex-wrap"
+              >
+                <div className="contenido-cita">
+                  <div className="icono-cita">
+                    <BiSolidCalendar size={36} color="#F59E0B" />
+                  </div>
+                  <div className="texto-cita">
+                    <h5 className="mb-1 fw-bold card-titulo">
+                      {cita.especialidad}
+                    </h5>
+                    <p className="mb-1 card-detalle">{cita.odontologo}</p>
+                    <p className="mb-0 card-detalle">
+                      {formatearFecha(cita.fecha)}, {cita.hora}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="d-flex flex-column gap-2">
+                  <button
+                    className="btn-verde d-flex align-items-center justify-content-center gap-2"
+                    onClick={() =>
+                      estaEnRangoPermitido(cita.fecha, cita.hora)
+                        ? navigate(`/reagendar/${cita.id}`)
+                        : setMensajeError(
+                            "No es posible reagendar citas el mismo día. Llame al consultorio para más información."
+                          )
+                    }
+                  >
+                    <FaRedo size={16} />
+                    Reagendar cita
+                  </button>
+                  <button
+                    className="btn-rojo d-flex align-items-center justify-content-center gap-2"
+                    onClick={() =>
+                      estaEnRangoPermitido(cita.fecha, cita.hora)
+                        ? handleCancelarClick(cita)
+                        : setMensajeError(
+                            "No es posible cancelar citas el mismo día. Llame al consultorio para más información."
+                          )
+                    }
+                  >
+                    <FaTimes size={16} />
+                    Cancelar cita
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         <ModalCancelarCita
@@ -141,11 +231,21 @@ export default function DashboardPage() {
   );
 }
 
-function formatearFecha(fechaISO) {
-  const fecha = new Date(fechaISO);
+function formatearFecha(fechaStr) {
+  const [y, m, d] = fechaStr.split("-").map(Number);
+  const fecha = new Date(y, m - 1, d, 12, 0); // Usar hora neutral para evitar desfase por zona horaria
   return fecha.toLocaleDateString("es-ES", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+}
+
+function estaEnRangoPermitido(fecha, hora) {
+  const [anio, mes, dia] = fecha.split("-").map(Number);
+  const [h, m] = hora.split(":").map(Number);
+  const fechaHora = new Date(anio, mes - 1, dia, h, m);
+  const ahora = new Date();
+  const diferencia = fechaHora - ahora;
+  return diferencia >= 24 * 60 * 60 * 1000; // 24h en milisegundos
 }
