@@ -1,3 +1,4 @@
+// DashboardPage.jsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import ErrorBanner from "../components/ErrorBanner";
 export default function DashboardPage() {
   const { logout, user } = useAuth();
   const [citas, setCitas] = useState([]);
+  const [fechaHoraServidor, setFechaHoraServidor] = useState(null);
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
@@ -28,21 +30,17 @@ export default function DashboardPage() {
       try {
         if (!user?.id) return;
 
-        // Obtener hora actual del servidor
         const { fecha: serverFecha, hora: serverHora } =
           await obtenerTiempoServidor();
         const [sy, sm, sd] = serverFecha.split("-").map(Number);
         const [sh, smin] = serverHora.split(":").map(Number);
-        const fechaHoraServidor = new Date(sy, sm - 1, sd, sh, smin);
+        const fechaHoraSrv = new Date(sy, sm - 1, sd, sh, smin);
+        setFechaHoraServidor(fechaHoraSrv);
 
-        // Obtener citas
         const data = await obtenerCitasPorPaciente(user.id);
-
-        // Filtrar citas válidas
         const citasFiltradas = data.filter((cita) => {
           const { fecha, hora, estado } = cita;
           if (!fecha || !hora) return false;
-
           const estadoValido =
             estado && ["activa", "reprogramada"].includes(estado.toLowerCase());
           if (!estadoValido) return false;
@@ -51,23 +49,7 @@ export default function DashboardPage() {
           const [ch, cmin] = hora.split(":").map(Number);
           const fechaHoraCita = new Date(cy, cm - 1, cd, ch, cmin);
 
-          if (
-            isNaN(fechaHoraCita.getTime()) ||
-            isNaN(fechaHoraServidor.getTime())
-          )
-            return false;
-
-          // LOG para verificar comportamiento
-          console.log("----");
-          console.log("Cita ID:", cita.id);
-          console.log("→ Cita:", fechaHoraCita.toISOString());
-          console.log("→ Servidor:", fechaHoraServidor.toISOString());
-          console.log(
-            "→ ¿Mostrar cita?:",
-            fechaHoraCita.getTime() > fechaHoraServidor.getTime()
-          );
-
-          return fechaHoraCita.getTime() > fechaHoraServidor.getTime();
+          return fechaHoraCita.getTime() > fechaHoraSrv.getTime();
         });
 
         setCitas(citasFiltradas);
@@ -104,7 +86,6 @@ export default function DashboardPage() {
     try {
       await cancelarCita(citaSeleccionada.id);
       setModalVisible(false);
-
       navigate("/confirmacion", {
         state: {
           especialidad: citaSeleccionada.especialidad,
@@ -191,7 +172,11 @@ export default function DashboardPage() {
                   <button
                     className="btn-verde d-flex align-items-center justify-content-center gap-2"
                     onClick={() =>
-                      estaEnRangoPermitido(cita.fecha, cita.hora)
+                      estaEnRangoPermitido(
+                        cita.fecha,
+                        cita.hora,
+                        fechaHoraServidor
+                      )
                         ? navigate(`/reagendar/${cita.id}`)
                         : setMensajeError(
                             "No es posible reagendar citas el mismo día. Llame al consultorio para más información."
@@ -204,7 +189,11 @@ export default function DashboardPage() {
                   <button
                     className="btn-rojo d-flex align-items-center justify-content-center gap-2"
                     onClick={() =>
-                      estaEnRangoPermitido(cita.fecha, cita.hora)
+                      estaEnRangoPermitido(
+                        cita.fecha,
+                        cita.hora,
+                        fechaHoraServidor
+                      )
                         ? handleCancelarClick(cita)
                         : setMensajeError(
                             "No es posible cancelar citas el mismo día. Llame al consultorio para más información."
@@ -233,7 +222,7 @@ export default function DashboardPage() {
 
 function formatearFecha(fechaStr) {
   const [y, m, d] = fechaStr.split("-").map(Number);
-  const fecha = new Date(y, m - 1, d, 12, 0); // Usar hora neutral para evitar desfase por zona horaria
+  const fecha = new Date(y, m - 1, d, 12, 0);
   return fecha.toLocaleDateString("es-ES", {
     year: "numeric",
     month: "long",
@@ -241,11 +230,11 @@ function formatearFecha(fechaStr) {
   });
 }
 
-function estaEnRangoPermitido(fecha, hora) {
+function estaEnRangoPermitido(fecha, hora, referencia) {
+  if (!referencia) return false;
   const [anio, mes, dia] = fecha.split("-").map(Number);
   const [h, m] = hora.split(":").map(Number);
-  const fechaHora = new Date(anio, mes - 1, dia, h, m);
-  const ahora = new Date();
-  const diferencia = fechaHora - ahora;
-  return diferencia >= 24 * 60 * 60 * 1000; // 24h en milisegundos
+  const fechaHoraCita = new Date(anio, mes - 1, dia, h, m);
+  const diferencia = fechaHoraCita.getTime() - referencia.getTime();
+  return diferencia >= 24 * 60 * 60 * 1000;
 }
